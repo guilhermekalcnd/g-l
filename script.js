@@ -2,13 +2,13 @@ const modal = document.getElementById("modal");
 const btn = document.querySelector(".surpresa-btn");
 const span = document.querySelector(".fechar");
 
-btn.onclick = function() {
-    modal.style.display = "block";
-}
+    btn.onclick = function() {
+        modal.style.display = "block";
+    }
 
-span.onclick = function() {
-    modal.style.display = "none";
-}
+    span.onclick = function() {
+        modal.style.display = "none";
+    }
 
 window.onclick = function(event) {
     if (event.target == modal) {
@@ -52,7 +52,7 @@ window.addEventListener('load', () => {
 
 // Contador de tempo juntos
 function atualizarTempoJuntos() {
-    const dataInicio = new Date('2023-09-29'); // Ajuste para a data que começaram a namorar
+    const dataInicio = new Date('2023-01-01'); // Ajuste para a data que começaram a namorar
     const agora = new Date();
     const diff = agora - dataInicio;
     
@@ -74,22 +74,40 @@ const perguntas = [
         pergunta: "Qual foi o local do nosso primeiro encontro?",
         opcoes: [
             "No shopping",
-            "Na carro",
+            "Na carro e depois hamburgueria",
             "No parque",
             "No restaurante"
         ],
-        correta: 1 // Índice da resposta correta (ajuste conforme necessário)
+        correta: 1 
     },
-
     {
-        pergunta: "Qual foi a primeira música que dançamos juntos?",
+        pergunta: "Quem se apaixonou primeiro?",
         opcoes: [
-            "Perfect - Ed Sheeran",
-            "All of Me - John Legend",
-            "At Last - Etta James",
-            "Can't Help Falling in Love - Elvis"
+            "Gui",
+            "Laura",
+            "Os dois ao mesmo tempo"
         ],
-        correta: 0 // Ajuste conforme necessário
+        correta: 2 
+    },
+    {
+        pergunta: "Qual dessas frases define melhor nosso relacionamento?",
+        opcoes: [
+            "Rir juntos é o nosso idioma.",
+            "Do nosso jeitinho, a gente se entende.",
+            "Melhores amigos e namorados.",
+            "A gente se completa e nem percebe."
+        ],
+        correta: 2 
+    },
+    {
+        pergunta: "Como seria nossa viagem dos sonhos?",
+        opcoes: [
+            "Viagem de carro sem destino certo",
+            "Resort all inclusive - Caribe ou Maldivas",
+            "Viagem de carro sem destino certo",
+            "Algo simples, só nós dois e paisagem bonita"
+        ],
+        correta: 1 
     }
 ];
 
@@ -116,6 +134,30 @@ function mostrarPergunta() {
     proximaPerguntaBtn.style.display = 'none';
 }
 
+// Função para criar corações flutuantes no quiz
+function createQuizHeart() {
+    const quizSection = document.querySelector('.quiz-section');
+    const heart = document.createElement('div');
+    heart.className = 'quiz-heart';
+    heart.innerHTML = '❤️';
+    
+    // Posição aleatória na largura da seção
+    const startX = Math.random() * quizSection.offsetWidth;
+    heart.style.left = startX + 'px';
+    heart.style.bottom = '0';
+    
+    quizSection.appendChild(heart);
+    
+    // Remove o coração depois da animação
+    heart.addEventListener('animationend', () => heart.remove());
+}
+
+// Criar corações periodicamente na seção do quiz
+function startQuizHearts() {
+    setInterval(createQuizHeart, 300); // Cria um novo coração a cada 300ms
+}
+
+// Modificar a função verificarResposta para adicionar mais corações quando acertar
 function verificarResposta(respostaIndex) {
     const pergunta = perguntas[perguntaAtual];
     const botoes = quizOpcoes.getElementsByClassName('quiz-opcao');
@@ -125,10 +167,14 @@ function verificarResposta(respostaIndex) {
     });
     
     if (respostaIndex === pergunta.correta) {
-        quizResultado.textContent = '❤️ Acertou! Você me conhece mesmo! ❤️';
+        quizResultado.textContent = '❤️ Arrasou diva!!❤️';
         botoes[respostaIndex].classList.add('correta');
+        // Criar vários corações quando acertar
+        for (let i = 0; i < 10; i++) {
+            setTimeout(createQuizHeart, i * 100);
+        }
     } else {
-        quizResultado.textContent = '💔 Ops! Essa não foi a resposta certa...';
+        quizResultado.textContent = '💔 Poxa Diva, você errou!';
         botoes[respostaIndex].classList.add('incorreta');
         botoes[pergunta.correta].classList.add('correta');
     }
@@ -141,15 +187,18 @@ proximaPerguntaBtn.onclick = () => {
     if (perguntaAtual < perguntas.length) {
         mostrarPergunta();
     } else {
-        quizPergunta.textContent = 'Parabéns! Você completou o quiz do nosso amor! 💑';
+        quizPergunta.textContent = 'Arrasou diva, Quiz completo! 💑';
         quizOpcoes.innerHTML = '';
-        quizResultado.textContent = 'Você é realmente especial! ❤️';
+        quizResultado.textContent = '❤️';
         proximaPerguntaBtn.style.display = 'none';
     }
 };
 
-// Inicia o quiz quando a página carrega
-window.addEventListener('load', mostrarPergunta);
+// Iniciar os corações quando a página carregar
+window.addEventListener('load', () => {
+    mostrarPergunta();
+    startQuizHearts();
+});
 
 // Smooth scroll para as seções
 document.querySelectorAll('nav ul li').forEach(item => {
